@@ -398,18 +398,15 @@ public class Step11ClassicStringTest extends PlainTestCase {
      */
     public void test_showMap_flat() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        String ans = "";
         for (ColorBox colorBox : colorBoxList) {
             List<BoxSpace> spaceList = colorBox.getSpaceList();
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
                 if (content instanceof java.util.Map) {
-                    ans = "map:" + content.toString().replace(",", ";");
+                    log("map:" + content.toString().replace(",", ";"));
                 }
             }
         }
-        log(ans);
-
     }
 
     /**
@@ -417,7 +414,16 @@ public class Step11ClassicStringTest extends PlainTestCase {
      * (カラーボックスの中に入っている java.util.Map を "map:{ key = value ; key = map:{ key = value ; ... } ; ... }" という形式で表示すると？)
      */
     public void test_showMap_nested() {
-
+        List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
+        for (ColorBox colorBox : colorBoxList) {
+            List<BoxSpace> spaceList = colorBox.getSpaceList();
+            for (BoxSpace boxSpace : spaceList) {
+                Object content = boxSpace.getContent();
+                if (content instanceof java.util.Map) {
+                    log("map:" + content.toString().replace(",", ";").replace("={", "=map:{ ").replace("=", " = "));
+                }
+            }
+        }
     }
 
     // ===================================================================================
