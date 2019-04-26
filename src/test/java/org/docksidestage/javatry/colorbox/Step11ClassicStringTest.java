@@ -15,7 +15,9 @@
  */
 package org.docksidestage.javatry.colorbox;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.docksidestage.bizfw.colorbox.ColorBox;
 import org.docksidestage.bizfw.colorbox.color.BoxColor;
@@ -104,8 +106,8 @@ public class Step11ClassicStringTest extends PlainTestCase {
             List<BoxSpace> spaceList = colorBox.getSpaceList();
             for (BoxSpace boxSpace : spaceList) {
                 Object content = boxSpace.getContent();
-                if (content instanceof String) {
-                    int length = ((String) content).length();
+                if (content != null) {
+                    int length = (content.toString()).length();
                     if (ans1 < length) {
                         int tmp = length;
                         length = ans1;
@@ -445,6 +447,45 @@ public class Step11ClassicStringTest extends PlainTestCase {
             }
         }
         log(ans);
+        log(stringToMap(ans).toString());
+    }
+
+    private Map<String, Object> stringToMap(String S) {
+        Map<String, Object> ret = new HashMap<>();
+
+        String sRaw = S.substring(5, S.length() - 1).trim();
+        int beginPoint = 0;
+
+        int level = 0;
+        for (int i = 0; i < sRaw.length(); i++) {
+            char c = sRaw.charAt(i);
+            if (c == '{') {
+                level++;
+            } else if (c == '}') {
+                level--;
+            } else if (c == ';' && level == 0) {
+                String ss = sRaw.substring(beginPoint, i).trim();
+                String key = ss.substring(0, ss.indexOf("=") - 1).trim();
+                String value = ss.substring(ss.indexOf("=") + 1).trim();
+
+                if (value.startsWith("map:")) {
+                    ret.put(key, stringToMap(value));
+                } else {
+                    ret.put(key, value);
+                }
+                beginPoint = i + 1;
+            }
+        }
+        String ss = sRaw.substring(beginPoint).trim();
+        String key = ss.substring(0, ss.indexOf("=") - 1).trim();
+        String value = ss.substring(ss.indexOf("=") + 1).trim();
+
+        if (value.startsWith("map:")) {
+            ret.put(key, stringToMap(value));
+        } else {
+            ret.put(key, value);
+        }
+        return ret;
     }
 
     /**
@@ -470,6 +511,8 @@ public class Step11ClassicStringTest extends PlainTestCase {
             }
         }
         log(ans1);
+        log(stringToMap(ans1).toString());
         log(ans2);
+        log(stringToMap(ans2).toString());
     }
 }
