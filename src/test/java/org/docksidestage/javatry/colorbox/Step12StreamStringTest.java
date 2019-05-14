@@ -405,6 +405,19 @@ public class Step12StreamStringTest extends PlainTestCase {
      */
     public void test_parseMap_nested() {
         List<ColorBox> colorBoxList = new YourPrivateRoom().getColorBoxList();
-        //colorBoxList.stream().
+
+        String[] objects = colorBoxList.stream()
+                .filter(colorBox -> colorBox.getColor().toString().equals("{white}"))
+                .map(colorBox -> colorBox.getSpaceList())
+                .map(spaceList -> (new String[] { ((YourPrivateRoom.SecretBox) spaceList.get(1).getContent()).getText(),
+                        ((YourPrivateRoom.SecretBox) spaceList.get(2).getContent()).getText() }))
+                .collect(Collectors.toList())
+                .get(0);
+
+        log(objects[0]);
+        log(stringToMap(objects[0]).toString());
+        log(objects[1]);
+        log(stringToMap(objects[1]).toString());
+
     }
 }
